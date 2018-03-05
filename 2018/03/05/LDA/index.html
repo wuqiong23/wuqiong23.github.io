@@ -85,10 +85,12 @@
 <meta property="og:url" content="http://yoursite.com/2018/03/05/LDA/index.html">
 <meta property="og:site_name" content="wuqiong23&#39;Zone">
 <meta property="og:description" content="线性判别分析LDA总结&amp;emsp;&amp;emsp;Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python">
-<meta property="og:updated_time" content="2018-03-05T12:32:32.000Z">
+<meta property="og:image" content="https://github.com/wuqiong23/wuqiong23.github.io/blob/master/images/LDA.png">
+<meta property="og:updated_time" content="2018-03-05T12:37:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA总结">
 <meta name="twitter:description" content="线性判别分析LDA总结&amp;emsp;&amp;emsp;Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python">
+<meta name="twitter:image" content="https://github.com/wuqiong23/wuqiong23.github.io/blob/master/images/LDA.png">
 
 
 
@@ -299,7 +301,7 @@
 
       
         <h1 id="线性判别分析LDA总结"><a href="#线性判别分析LDA总结" class="headerlink" title="线性判别分析LDA总结"></a>线性判别分析LDA总结</h1><p>&emsp;&emsp;Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的限制以及与PCA的对比等方面对LDA进行总结。</p>
-<h2 id="LDA的思想"><a href="#LDA的思想" class="headerlink" title="LDA的思想"></a>LDA的思想</h2><p>&emsp;&emsp;LDA是一种监督学习的降维技术，也就是说它的数据集的每个样本是有类别输出的。LDA的思想可以用一句话概括，就是“投影后类内方差最小，类间方差最大”。也就是说，我们要将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。举例来说，假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。<br><br><img src="" alt=""></p>
+<h2 id="LDA的思想"><a href="#LDA的思想" class="headerlink" title="LDA的思想"></a>LDA的思想</h2><p>&emsp;&emsp;LDA是一种监督学习的降维技术，也就是说它的数据集的每个样本是有类别输出的。LDA的思想可以用一句话概括，就是“投影后类内方差最小，类间方差最大”。也就是说，我们要将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。举例来说，假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。<br><br><img src="https://github.com/wuqiong23/wuqiong23.github.io/blob/master/images/LDA.png" alt="LDA"></p>
 <p>&emsp;&emsp;上图提供了两种投影方式，从直观上可以看出，右图要比左图的投影效果好，因为右图的同色数据较为集中，且类别之间的距离明显。左图则在边界处数据混杂。<br><br>&emsp;&emsp;在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
 
       
