@@ -87,7 +87,7 @@
 <meta property="og:description" content="线性判别分析LDA总结   Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法\(T(n) = \Theta(n)\)，\(x_i\)，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/myimages/LDA.png">
-<meta property="og:updated_time" content="2018-03-06T03:02:13.000Z">
+<meta property="og:updated_time" content="2018-03-06T03:42:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LDA总结">
 <meta name="twitter:description" content="线性判别分析LDA总结   Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法\(T(n) = \Theta(n)\)，\(x_i\)，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，">
@@ -442,7 +442,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -521,6 +521,11 @@
 
 
 
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+<% if (page.mathjax){ %>
+<%- partial('mathjax') %>
+<% } %>
 
         
 

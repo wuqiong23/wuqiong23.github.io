@@ -79,13 +79,23 @@
 
 
 
-<meta property="og:type" content="website">
+<meta name="description" content="线性判别分析LDA总结   Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的">
+<meta property="og:type" content="article">
 <meta property="og:title" content="wuqiong&#39;Zone">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/2018/03/06/LDA_test/index.html">
 <meta property="og:site_name" content="wuqiong&#39;Zone">
+<meta property="og:description" content="线性判别分析LDA总结   Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="attachment:/myimages/LDA/LDA.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/06/LDA_test/output_5_1.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/06/LDA_test/output_6_1.png">
+<meta property="og:image" content="http://yoursite.com/2018/03/06/LDA_test/output_8_1.png">
+<meta property="og:image" content="attachment:PCAandLDA.jpg">
+<meta property="og:updated_time" content="2018-03-06T03:38:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="wuqiong&#39;Zone">
+<meta name="twitter:description" content="线性判别分析LDA总结   Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的">
+<meta name="twitter:image" content="attachment:/myimages/LDA/LDA.png">
 
 
 
@@ -115,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/03/06/LDA_test/"/>
 
 
 
 
 
-  <title>wuqiong'Zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title> | wuqiong'Zone</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -140,8 +150,7 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
-  page-home">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +223,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +255,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/06/LDA_test/" itemprop="url">未命名</a></h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -298,9 +305,7 @@
       
 
       
-        
-          
-            <h1 id="线性判别分析lda总结">线性判别分析LDA总结</h1>
+        <h1 id="线性判别分析lda总结">线性判别分析LDA总结</h1>
 <p>  Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的限制以及与PCA的对比等方面对LDA进行总结。 ## LDA的思想   LDA是一种监督学习的降维技术，也就是说它的数据集的每个样本是有类别输出的。LDA的思想可以用一句话概括，就是“投影后类内方差最小，类间方差最大”。也就是说，我们要将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。举例来说，假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。<br> <img src="attachment:/myimages/LDA/LDA.png" alt="LDA"></p>
 <p>  上图提供了两种投影方式，从直观上可以看出，右图要比左图的投影效果好，因为右图的同色数据较为集中，且类别之间的距离明显。左图则在边界处数据混杂。<br>   在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
 <h2 id="数学基础">数学基础</h2>
@@ -420,8 +425,6 @@ PCA降维效果图：</code></pre>
 <li><a href="http://blog.csdn.net/lhz76ttw1u/article/details/60768981" target="_blank" rel="noopener">用scikit-learn进行LDA降维</a></li>
 </ol>
 
-          
-        
       
     </div>
     
@@ -438,132 +441,28 @@ PCA降维效果图：</code></pre>
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/05/SNE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Joan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wuqiong'Zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/05/SNE/" itemprop="url">SNE</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T20:28:09+08:00">
-                2018-03-05
-              </time>
+              <a href="/2018/03/05/SNE/" rel="next" title="SNE">
+                <i class="fa fa-chevron-left"></i> SNE
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -573,277 +472,11 @@ PCA降维效果图：</code></pre>
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/05/LDA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Joan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wuqiong'Zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/05/LDA/" itemprop="url">LDA总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T20:08:57+08:00">
-                2018-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="线性判别分析lda总结">线性判别分析LDA总结</h1>
-<p>  Fisher‘s Linear Discriminant (FLD) 是统计学上的经典分析方法<span class="math inline">\(T(n) = \Theta(n)\)</span>，<span class="math inline">\(x_i\)</span>，LDA在FLD的基础上增加了关于变量分布和协方差的假设：1.样本数据服从正态分布，2.各类的协方差相等。虽然这些假设在实际中不一定满足，但是LDA既可以用来作线性分类，也可以用来对数据进行降维。下面，我们从LDA的思想，数学基础，原理，算法流程，python实现，使用LDA的限制以及与PCA的对比等方面对LDA进行总结。 ## LDA的思想   LDA是一种监督学习的降维技术，也就是说它的数据集的每个样本是有类别输出的。LDA的思想可以用一句话概括，就是“投影后类内方差最小，类间方差最大”。也就是说，我们要将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。举例来说，假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。<br> <img src="/myimages/LDA.png" alt="LDA"></p>
-<p>  上图提供了两种投影方式，从直观上可以看出，右图要比左图的投影效果好，因为右图的同色数据较为集中，且类别之间的距离明显。左图则在边界处数据混杂。<br>   在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。 ## 数学基础   在具体讲解LDA原理之前，我们先补充一些相关的数学基础知识——瑞利商（Rayleigh quotient）与广义瑞利商（genralized Rayleigh quotient）<br> ### 瑞利商   瑞利商的函数如下： <span class="math display">\[R(A,x)= \frac{x^{T}Ax}{x^{T}x}\]</span>   其中x为非零向量，而A为<span class="math inline">\(n*n\)</span>的Hermitan矩阵。所谓的Hermitan矩阵就是满足共轭转置矩阵和自己相等的矩阵，即<span class="math inline">\(A^{T}=A\)</span>。如果我们的矩阵A是实矩阵，则满足<span class="math inline">\(A^{T}=A\)</span>的矩阵即为Hermitan矩阵。<br>   瑞利商R(A,x)有一个非常重要的性质，即它的最大值等于矩阵A最大的特征值，而最小值等于矩阵A的最小的特征值，也就是满足:</p>
-<p><span class="math display">\[\lambda_{min}\le\frac{x^{T}Ax}{x^{T}x}\le \lambda_{max}\]</span></p>
-<p>  当向量x是标准正交基时，即满足<span class="math inline">\(x^{T}x = 1\)</span>时，瑞利商简化为：<span class="math inline">\(R(A,x)= x^{T}Ax\)</span>。</p>
-<h3 id="广义瑞利商">广义瑞利商</h3>
-<p>  广义瑞利商的函数如下： <span class="math display">\[R(A,B,x)= \frac{x^{T}Ax}{x^{T}Bx}\]</span>   其中x为非零向量，而A，B为<span class="math inline">\(n*n\)</span>的Hermitan矩阵，B为正定矩阵。我们可以将其通过标准化转化为瑞利商的格式。我们令<span class="math inline">\(x^{&#39;}=B^{-1/2}x\)</span>，则分母转化为：<br></p>
-<p><span class="math display">\[x^{T}Bx = x^{&#39;T}(B^{-1/2})^{T}B(B^{-1/2})x^{&#39;}= x^{&#39;T}B^{-1/2}B(B^{-1/2})x^{&#39;}= x^{&#39;T}x^{&#39;}\]</span></p>
-<p>  分子转化为： <span class="math display">\[x^{T}Ax = x^{&#39;T}B^{-1/2}AB^{-1/2}x^{&#39;}\]</span></p>
-<p>  此时<span class="math inline">\(R(A,B,x)\)</span>转化为<span class="math inline">\(R(A,B,x^{&#39;})\)</span>：</p>
-<p><span class="math display">\[R(A,B,x^{&#39;})= \frac{x^{&#39;T}B^{-1/2}AB^{-1/2}x^{&#39;}}{x^{&#39;T}x^{&#39;}}\]</span></p>
-<p>  利用前面的瑞利商的性质，可知，<span class="math inline">\(R(A,B,x)\)</span>的最大值为矩阵<span class="math inline">\(B^{-1/2}AB^{-1/2}\)</span>，也即矩阵<span class="math inline">\(B^{-1}A\)</span>的最大特征值。而最小值为矩阵<span class="math inline">\(B^{-1}A\)</span>的最小特征值。</p>
-<h2 id="lda原理">LDA原理</h2>
-<h3 id="二分类原理">二分类原理</h3>
-<p>  假设我们的数据集<span class="math inline">\(D = \{(x_{1},y_{1}),(x_{2},y_{2}),...,(x_{m},y_{m})\}\)</span>。其中任意样本<span class="math inline">\(x_{i}\)</span>为n维向量，<span class="math inline">\(y_{i}\in\{0，1\}\)</span>。我们定义<span class="math inline">\(N_{j}(j=0,1)\)</span>为第j类样本的个数，<span class="math inline">\(X_{j}(j=0,1)\)</span>为第j类样本的集合，而<span class="math inline">\(\mu_{j}(j=0,1)\)</span>为第j类样本的均值向量，定义<span class="math inline">\(\sum_{j}(j=0,1)\)</span>为第j类样本的协方差矩阵（严格说是缺少分母部分的协方差矩阵）。<br> <span class="math inline">\(\mu_{j}\)</span>的表达式为：</p>
-<p><span class="math display">\[\mu_{j} = \frac{1}{N_{j}}\sum_{x \in X_{j}}x(j=0,1)\]</span></p>
-<p>  <span class="math inline">\(\sum_{j}\)</span>的表达式为：</p>
-<p><span class="math display">\[\sum_{j} = \sum_{x \in X_{j}}(x-\mu_{j})(x-\mu_{j})^{T}(j=0,1)\]</span>   由于是两类数据，因此我们只需要将数据投影到一条直线上即可。假设我们的投影直线是向量w，则对任意一个样本<span class="math inline">\(x_{i}\)</span>，它在直线w的投影为<span class="math inline">\(w^{T}x_{i}\)</span>，对于我们的两个类别的中心点<span class="math inline">\(\mu_{0}\)</span>，<span class="math inline">\(\mu_{1}\)</span>，在直线w的投影为<span class="math inline">\(w^{T}\mu_{0}\)</span>和<span class="math inline">\(w^{T}\mu_{1}\)</span>。由于LDA需要让不同类别的数据的类别中心之间的距离尽可能的大，也就是我们要最大化<span class="math inline">\(||w^{T}\mu_{0}-w^{T}\mu_{1}||^{2}_{2}\)</span>，同时我们希望同一种类别数据的投影点尽可能的接近，也就是要同类样本投影点的协方差<span class="math inline">\(w^{T}\sum_{0}w\)</span>和<span class="math inline">\(w^{T}\sum_{1}w\)</span>尽可能的小，即最小化<span class="math inline">\(w^{T}\sum_{0}w + w^{T}\sum_{1}w\)</span>。<br></p>
-<p>  综上所述，我们的优化目标为： <span class="math display">\[\mathop{\arg\max}_wJ(W)=\frac{||w^{T}\mu_{0}-w^{T}\mu_{1}||^{2}_{2}}{w^{T}\sum_{0}w + w^{T}\sum_{1}w} = \frac{w^{T}(\mu_{0}-\mu_{1})(\mu_{0}-\mu_{1})^{T}w}{w^{T}(\sum_{0}+\sum_{1})w}\]</span><br></p>
-<p>  我们一般定义类内散度矩阵<span class="math inline">\(S_{w}\)</span>为：</p>
-<p><span class="math display">\[S_{w} = \sum_{0}+\sum_{1} = \sum_{x \in X_{0}}(x - \mu_{0})(x - \mu_{0})^{T} + \sum_{x \in X_{1}}(x - \mu_{1})(x - \mu_{1})^{T}\]</span></p>
-<p>  同时定义类间散度矩阵<span class="math inline">\(S_{b}\)</span>为： <span class="math display">\[S_{b}= (\mu_{0}-\mu_{1})(\mu_{0}-\mu_{1})^{T}\]</span></p>
-<p>  这样，我们的优化目标重写为：</p>
-<p><span class="math display">\[\mathop{\arg\max}_wJ(W)= \frac{w^{T}S_{b}w}{w^{T}S_{w}w}\]</span><br></p>
-<p>  可以看出，上式即为广义瑞利商的形式，我们利用广义瑞利商的性质可知，<span class="math inline">\(J(w)\)</span>的最大值为矩阵<span class="math inline">\(S_{w}^{-1}S_{b}\)</span>的最大特征值，而对应的w为<span class="math inline">\(S_{w}^{-1}S_{b}\)</span>的最大特征值对应的特征向量。</p>
-<p>  对于二类的时候，<span class="math inline">\(S_{b}w\)</span>的方向恒为<span class="math inline">\(\mu_{0}-\mu_{1}\)</span>，不妨令<span class="math inline">\(S_{b}w = \lambda(\mu_{0}-\mu_{1})\)</span>，将其带入：<span class="math inline">\((S_{w}^{-1}S_{b})w = \lambda w\)</span>，可以得到<span class="math inline">\(w = S_{w}^{-1}(\mu_{0}-\mu_{1})\)</span>，也就是说我们只要求出原始二类样本的均值和方差就可以确定最佳的投影方向w了。</p>
-<h3 id="多分类原理">多分类原理</h3>
-<p>  有了二类LDA的基础，我们再来看看多类别LDA的原理。<br><br>   假设我们的数据集 $ D = {(x_{1},y_{1}),,(x_{2},y_{2}),,...,,(x_{m},y_{m})}$ 其中任意样本<span class="math inline">\(x_{i}\)</span>为n维向量，<span class="math inline">\(y_{i}\in\{C_{1},\,C_{2},\,...,\,C_{k}\}\)</span>。我们定义<span class="math inline">\(N_{j}(j=1,2,...,k)\)</span>为第j类样本的个数，<span class="math inline">\(X_{j}(j=1,2,...,k)\)</span>为第j类样本的集合，而<span class="math inline">\(\mu_{j}(j=1,2,...,k)\)</span>为第j类样本的均值向量，定义为<span class="math inline">\(\sigma_{j}(j=1,2,...,k)\)</span>第j类样本的协方差矩阵。在二类LDA里面定义的公式可以很容易的类推到多类LDA。<br><br>   由于我们是多类向低维投影，则此时投影到的低维空间就不是一条直线，而是一个超平面。假设我们投影到的低维空间的维度为d，对应的基向量为<span class="math inline">\((w_{1},\,w_{2},\,...,\,w_{d})\)</span>，基向量的矩阵为<span class="math inline">\(W\)</span>，他是一个<span class="math inline">\(n\times d\)</span>的矩阵。<br>   此时我们的优化目标应该可以变成为： <span class="math display">\[\frac{W^T S_{b}W}{W^T S_{w}W}\]</span><br>   其中<span class="math inline">\(S_{b}=\sum_{j=1}^k N_{j}(\mu_j-\mu)(\mu_j-\mu)^T\)</span>,<span class="math inline">\(\mu\)</span>为所有样本的均值向量。而<span class="math inline">\(S_w=\sum_{j=1}^kS_{wj}=\sum_{j=1}^k\sum_{x\in X_j}(x-\mu_j)(x-\mu_j)^T\)</span>。<br><br>   但是有一个问题，就是<span class="math inline">\(W^T S_{b}W\)</span>和<span class="math inline">\(W^T S_{w}W\)</span>都是矩阵，不是标量，无法作为一个标量函数来优化！也就是说，我们无法直接用二类LDA的优化方法，怎么办呢？一般来说，我们可以用其他的一些替代优化目标来实现。<br><br>   常见的一个LDA多类优化目标函数定义为: <span class="math display">\[\mathop{\arg\max}_WJ(W)=\frac{\prod_{diag}W^TS_bW}{\prod_{diag}W^TS_wW}\]</span><br><br>   其中<span class="math inline">\(\prod_{diag}A\)</span>为<span class="math inline">\(A\)</span>的主对角线元素的乘积，<span class="math inline">\(W\)</span>为<span class="math inline">\(n\times d\)</span>的矩阵。<br><br>   <span class="math inline">\(J(W)\)</span>的优化过程可以转化为： <span class="math display">\[J(W)=\frac{\prod_{i=1}^dw_i^TS_bw_i}{\prod_{i=1}^dw_i^TS_ww_i}=\prod_{i=1}^d\frac{w_i^TS_bw_i}{w_i^TS_ww_i}\]</span> <br><br>   仔细观察上式最右边，这正是广义瑞利商。最大值是矩阵<span class="math inline">\(S_w^{-1}S_b\)</span>的最大特征值，最大的d个值的乘积就是矩阵<span class="math inline">\(S_w^{-1}S_b\)</span>的最大的d个特征值的乘积，此时对应的矩阵<span class="math inline">\(W\)</span>为这最大的d个特征值对应的特征向量张成的矩阵。<br><br>   由于<span class="math inline">\(W\)</span>是一个利用了样本的类别得到的投影矩阵，因此它降维到的维度d最大值为k-1。为什么最大维度不是类别数k呢？因为<span class="math inline">\(S_b\)</span>中每个<span class="math inline">\(\mu_j-\mu\)</span>的秩为1，因此协方差矩阵相加后最大的秩为k（矩阵的秩小于等于各个相加矩阵的秩的和），但是由于如果我们知道前k-1个<span class="math inline">\(\mu_j\)</span>后，最后一个<span class="math inline">\(\mu_k\)</span>可以由前k-1个<span class="math inline">\(\mu_j\)</span>线性表示，因此<span class="math inline">\(S_b\)</span>的秩最大为k-1，即特征向量最多由k-1个。</p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/05/HelloWord/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Joan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wuqiong'Zone">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/05/HelloWord/" itemprop="url">HelloWord</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-05T13:54:11+08:00">
-                2018-02-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -851,6 +484,10 @@ PCA降维效果图：</code></pre>
 
 
           
+
+  
+
+
 
         </div>
         
@@ -871,8 +508,17 @@ PCA降维效果图：</code></pre>
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -914,6 +560,22 @@ PCA降维效果图：</code></pre>
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#线性判别分析lda总结"><span class="nav-number">1.</span> <span class="nav-text">线性判别分析LDA总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数学基础"><span class="nav-number">1.1.</span> <span class="nav-text">数学基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#广义瑞利商"><span class="nav-number">1.1.1.</span> <span class="nav-text">广义瑞利商</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lda原理"><span class="nav-number">1.2.</span> <span class="nav-text">LDA原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lda算法流程"><span class="nav-number">1.3.</span> <span class="nav-text">LDA算法流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python实现"><span class="nav-number">1.4.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用lda的限制"><span class="nav-number">1.5.</span> <span class="nav-text">使用LDA的限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lda与pca的对比"><span class="nav-number">1.6.</span> <span class="nav-text">LDA与PCA的对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">1.7.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1052,6 +714,10 @@ PCA降维效果图：</code></pre>
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
